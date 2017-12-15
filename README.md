@@ -41,4 +41,5 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     3.api/message.js 错误信息,供ui提示使用
     4.api/interface.js api接口名集合
     5.common/localstorage.js localstorage封装
-
+    6.common/cookie.js cookie封装
+    7.common/validate.js 验证封装
