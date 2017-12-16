@@ -132,9 +132,10 @@ body {
 </style>
 <script>
 import api from '@/api/login'
+import * as code from '@/api/errorcode'
 import * as msg from '@/api/message'
 export default {
-  data() {
+  data () {
     return {
       loginInfo: {
         userName: '',
@@ -143,23 +144,25 @@ export default {
     }
   },
   methods: {
-    submit() {
+    submit () {
       if (this.loginInfo.userName === '' || this.loginInfo.userPwd === '') {
-          this.$message({
+        this.$message({
           showClose: true,
           message: msg.NO_ACCOUNT_OR_PASSWORD,
           type: 'error'
-          })
+        })
         return
       }
       api.login(this.loginInfo).then(response => {
-        if (response === 0) {
-          // todo 登录成功
+        if (response === code.SUCCESS) {
+          // 登录成功
+          // this.$router.push('/index')
+          location.href = '/index'
         } else {
           this.$message({
-          showClose: true,
-          message: response,
-          type: 'error'
+            showClose: true,
+            message: response,
+            type: 'error'
           })
         }
       })
