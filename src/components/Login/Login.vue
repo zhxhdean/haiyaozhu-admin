@@ -156,7 +156,6 @@ export default {
       api.login(this.loginInfo).then(response => {
         if (response === code.SUCCESS) {
           // 登录成功
-          // this.$router.push('/index')
           location.href = '/index'
         } else {
           this.$message({

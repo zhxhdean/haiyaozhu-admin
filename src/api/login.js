@@ -45,6 +45,11 @@ function saveToken (token) {
   }
 }
 
+// 获取用户对象
+function getUser () {
+  return storage.get('user')
+}
+
 // 保存登陆信息
 function saveUser (user) {
   if (utils.isJSON(user) && user !== '') {
@@ -59,5 +64,6 @@ function saveUser (user) {
 
 export default {
   login,
-  isLogined
+  isLogined,
+  getUser
 }
