@@ -1,9 +1,9 @@
 <template>
-  <form action="" class="login-form" @submit.prevent="submit">
-      <input type="text" class="txt" placeholder="帐户" v-model="loginInfo.userName" />
-      <input type="password" class="txt" placeholder="密码" v-model="loginInfo.userPwd" />
-      <input type="submit" class="btn" value="登 陆">
-  </form>
+  <div class="login-form" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+    <input type="text" class="txt" placeholder="帐户" v-model="loginInfo.userName" />
+    <input type="password" class="txt" placeholder="密码" v-model="loginInfo.userPwd" @keyup.enter="submit" />
+    <input type="submit" class="btn" value="登 陆" @click="submit">
+  </div>
 </template>
 <style>
 * {
@@ -135,8 +135,9 @@ import api from '@/api/login'
 import * as code from '@/api/errorcode'
 import * as msg from '@/api/message'
 export default {
-  data () {
+  data() {
     return {
+      loading: false,
       loginInfo: {
         userName: '',
         userPwd: ''
@@ -144,7 +145,7 @@ export default {
     }
   },
   methods: {
-    submit () {
+    submit() {
       if (this.loginInfo.userName === '' || this.loginInfo.userPwd === '') {
         this.$message({
           showClose: true,
@@ -153,7 +154,9 @@ export default {
         })
         return
       }
+      this.loading = true
       api.login(this.loginInfo).then(response => {
+        this.loading = false
         if (response === code.SUCCESS) {
           // 登录成功
           location.href = '/index'

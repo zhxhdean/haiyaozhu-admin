@@ -1,12 +1,12 @@
 import ajax from './ajaxhelper'
-import { LOGIN } from './interface'
-import { NO_PASSWORD, SUCCESS, ERROR } from './errorcode'
-import { MISSING_PARAMETER, ERORR_ACCOUNT_OR_PASSWORD } from './message'
+import {LOGIN} from './interface'
+import {NO_PASSWORD, SUCCESS, ERROR} from './errorcode'
+import {MISSING_PARAMETER, ERORR_ACCOUNT_OR_PASSWORD, UNKNOW_ERROR} from './message'
 import storage from '@/common/localstorage'
 import utils from '@/common/utils'
-
+import {LOGIN_PAGE} from '@/common/urls'
 // 登录
-function login (loginInfo) {
+function login(loginInfo) {
   const payload = {
     user: loginInfo.userName,
     passwd: loginInfo.userPwd
@@ -17,7 +17,7 @@ function login (loginInfo) {
       if (response.code === SUCCESS && response.data.token !== '') {
         // 保存token
         saveToken(response.data.token)
-        saveUser(response.data)
+        saveUser(response.data, loginInfo.userName)
         return SUCCESS
       }
       if (response.code === NO_PASSWORD) {
@@ -25,12 +25,19 @@ function login (loginInfo) {
       } else if (response.code === ERROR) {
         return ERORR_ACCOUNT_OR_PASSWORD
       }
-      return response.UNKNOW_ERROR
+      return UNKNOW_ERROR
     })
 }
 
+// 退出
+function logout() {
+  storage.remove('token')
+  storage.remove('user')
+  location.href = LOGIN_PAGE
+}
+
 // 客户端简单判断是否已登录状态
-function isLogined () {
+function isLogined() {
   const token = storage.get('token') || ''
   if (token === '') {
     return false
@@ -39,25 +46,26 @@ function isLogined () {
 }
 
 // 保存token到storage
-function saveToken (token) {
+function saveToken(token) {
   if (token !== '') {
     storage.set('token', token)
   }
 }
 
 // 获取用户对象
-function getUser () {
+function getUser() {
   return storage.get('user')
 }
 
 // 保存登陆信息
-function saveUser (user) {
-  if (utils.isJSON(user) && user !== '') {
+function saveUser(userInfo, userName) {
+  if (utils.isJSON(userInfo) && userInfo !== '') {
     storage.set('user', {
-      hotelid: user.HotelId,
-      uid: user.Uid,
-      hotel_name: user.HotelName || '',
-      level: user.UserLevel
+      hotelID: userInfo.HotelId,
+      uid: userInfo.Uid,
+      hotelName: userInfo.HotelName || '',
+      level: userInfo.UserLevel,
+      userName: userName
     })
   }
 }
@@ -65,5 +73,6 @@ function saveUser (user) {
 export default {
   login,
   isLogined,
-  getUser
+  getUser,
+  logout
 }

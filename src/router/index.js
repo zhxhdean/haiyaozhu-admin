@@ -14,8 +14,7 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login
-    },
-    {
+    }, {
       path: '/',
       component: Layout,
       children: [
@@ -26,8 +25,7 @@ const router = new Router({
           meta: {
             requireLogin: true // 需要登录
           }
-        },
-        {
+        }, {
           path: '/index',
           name: 'Index',
           component: Index,
@@ -44,13 +42,13 @@ const router = new Router({
 // 对url做拦截,未登陆的跳转到login页面
 router.beforeEach((to, from, next) => {
   if (to.path === '/') {
-    next({ path: '/index' })
+    next({path: '/index'})
   }
   if (to.meta.requireLogin) {
     if (loginAPI.isLogined()) {
       next()
     } else {
-      next({ path: '/login' })
+      next({path: '/login'})
     }
   } else {
     next()
