@@ -5,5 +5,7 @@ export const LOGIN = '/admin/login'
 export const HOTEL_LIST = '/admin/index'
 // 设置酒店上下线
 export const HOTEL_VALIDATE = '/admin/sethotelvalid'
+// 图片删除
+export const IMAGE_DELETE = '/admin/delete'
 // 二维码接口
 export const QRCODE = '/wx_qrcode'

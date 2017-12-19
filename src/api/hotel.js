@@ -1,5 +1,5 @@
 import ajax from './ajaxhelper'
-import {HOTEL_LIST, HOTEL_VALIDATE, QRCODE} from './interface'
+import {HOTEL_LIST, HOTEL_VALIDATE, QRCODE, IMAGE_DELETE} from './interface'
 import login from './login'
 import {SUCCESS, ERROR, TIMEOUT} from './errorcode'
 import {UNKNOW_ERROR, NETWORK_TIMEOUT, SUCCESS_ACTION, FAIL_ACTION} from './message'
@@ -59,9 +59,27 @@ function getHotelQRCode(hotelID) {
       }
     })
 }
-
+// 删除图片
+function deleteHotelImage(params) {
+  const payload = {
+    hoteluid: params.uid,
+    hotelid: params.hotelID,
+    imageid: params.id
+  }
+  return ajax.post(IMAGE_DELETE, payload)
+  .then(response => {
+    if (response.code === SUCCESS) {
+      return SUCCESS
+    } else if (response.code === ERROR) {
+      return UNKNOW_ERROR
+    } else if (response.code === TIMEOUT) {
+      return NETWORK_TIMEOUT
+    }
+  })
+}
 export default {
   getHotelList,
   setHotelValidate,
-  getHotelQRCode
+  getHotelQRCode,
+  deleteHotelImage
 }

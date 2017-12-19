@@ -37,9 +37,9 @@
       </el-table-column>
       <el-table-column prop="Owner" label="录入员" width="80" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="UserName" label="酒店账号" show-overflow-tooltip>
+      <el-table-column prop="UserName" label="酒店账号" width="120" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="HotelTel" label="联系电话" show-overflow-tooltip>
+      <el-table-column prop="HotelTel" label="联系电话" width="150" show-overflow-tooltip>
       </el-table-column>
       <el-table-column label="最新订单" width="80" show-overflow-tooltip>
         <template slot-scope="scope">{{ scope.row.HasNewOrder === true ? '有' : '无' }}</template>
@@ -59,7 +59,7 @@
         <template slot-scope="scope">
           <el-button-group>
             <el-button type="primary" icon="el-icon-edit"></el-button>
-            <el-button type="primary" icon="el-icon-share" @click="showQRCode(scope.row.HotelId,$event)" :loading="false"></el-button>
+            <el-button type="primary" icon="el-icon-share" @click="showQRCode(scope.row)"></el-button>
           </el-button-group>
         </template>
       </el-table-column>
@@ -108,11 +108,17 @@ export default {
       })
       // console.log(this.multipleSelection)
     },
-    showQRCode(hotelID, $event) {
-      hotel.getHotelQRCode(hotelID).then(
+    showQRCode(row) {
+      hotel.getHotelQRCode(row.HotelId).then(
         response => {
-          if (utils.isJSON(response)) {
-            console.log(response.imgurl)
+          if (utils.isJSON(response) && response.imgurl !== '') {
+            this.$alert(`<img src="${response.imgurl}" class="qrcode"/>`, row.HotelName, {
+              dangerouslyUseHTMLString: true,
+              showClose: false,
+              center: true,
+              closeOnClickModal: true,
+              confirmButtonText: '关闭'
+            })
           } else {
             this.$notify.warning({
               title: '警告',
@@ -192,5 +198,8 @@ export default {
 <style>
 .gray {
   color: #eee;
+}
+.qrcode {
+  width: 350px;
 }
 </style>

@@ -52,6 +52,11 @@ function saveToken(token) {
   }
 }
 
+// 获取token
+function getToken() {
+  return storage.get('token')
+}
+
 // 获取用户对象
 function getUser() {
   return storage.get('user')
@@ -74,5 +79,6 @@ export default {
   login,
   isLogined,
   getUser,
-  logout
+  logout,
+  getToken
 }

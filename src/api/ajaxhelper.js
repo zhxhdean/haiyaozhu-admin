@@ -3,7 +3,7 @@ import storage from '../common/localstorage'
 import {TIMEOUT, TOKEN_ERROR} from './errorcode'
 axios.defaults.baseURL = 'http://m.haiyaozhu.com/openapi'
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
-axios.defaults.timeout = 30000
+axios.defaults.timeout = 5000
 // axios.defaults.withCredentials = true 给参数包装上head
 function setHeader(params) {
   let payload = {
