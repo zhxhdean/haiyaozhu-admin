@@ -5,6 +5,7 @@ import Index from '@/components/Index.vue'
 import Layout from '@/components/Layout.vue'
 import HotelList from '@/components/Hotel/HotelList.vue'
 import HotelImageList from '@/components/Hotel/HotelImageList'
+import HotelAdd from '@/components/Hotel/HotelAdd'
 import loginAPI from '@/api/login.js'
 Vue.use(Router)
 
@@ -37,6 +38,13 @@ const router = new Router({
           path: '/hotelimagelist',
           name: 'HotelImageList',
           component: HotelImageList,
+          meta: {
+            requireLogin: true // 需要登录
+          }
+        }, {
+          path: '/hotel/add',
+          name: 'HotelAdd',
+          component: HotelAdd,
           meta: {
             requireLogin: true // 需要登录
           }
