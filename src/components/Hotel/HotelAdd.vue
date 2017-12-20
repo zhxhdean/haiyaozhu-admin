@@ -1,14 +1,14 @@
 <template>
   <div class="form">
-    <el-form label-width="80px" :model="hotelform" ref="hotelform">
+    <el-form label-width="90px" :model="hotelform" ref="hotelform">
       <el-form-item label="酒店名称" prop="hotelName" :rules="[{ required: true, message: '酒店名不能为空', trigger: 'blur'}]">
-        <el-input v-model="hotelform.hotelName" style="width:350px"></el-input>
+        <el-input v-model="hotelform.hotelName" placeholder="请输入酒店名称" style="width:350px"></el-input>
       </el-form-item>
       <el-form-item label="酒店地址" prop="hotelAddress" :rules="[{ required: true, message: '酒店地址不能为空', trigger: 'blur'}]">
-        <el-input v-model="hotelform.hotelAddress" style="width:350px"></el-input>
+        <el-input v-model="hotelform.hotelAddress" placeholder="请输入酒店地址" style="width:350px"></el-input>
       </el-form-item>
       <el-form-item label="酒店电话" prop="hotelTel" :rules="[{ required: true, message: '酒店电话不能为空', trigger: 'blur'}]">
-        <el-input v-model="hotelform.hotelTel" style="width:350px"></el-input>
+        <el-input v-model="hotelform.hotelTel" placeholder="请输入酒店电话" style="width:350px"></el-input>
       </el-form-item>
       <el-form-item label="所在城市" prop="cityID">
         <el-cascader :options="formatCity" v-model="selectedCity" @change="choicedCity" :props="props" expand-trigger="hover" size="medium"></el-cascader>
@@ -53,11 +53,37 @@
         <el-switch v-model="hotelform.isPriority" active-color="#13ce66" :width="50">
         </el-switch>
       </el-form-item>
-      <el-form-item label="酒店简介" prop="hotelDesc">
-        <quill-editor v-model="hotelform.hotelDesc" ref="myQuillEditor" class="editer" 
-        :options="editorOption" @ready="onEditorReady($event)">
+      <el-form-item label="酒店简介" prop="hotelDesc" style="height:200px;">
+        <quill-editor v-model="hotelform.hotelDesc" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
         </quill-editor>
       </el-form-item>
+      <template v-for="promotion of hotelform.hotelPromotions">
+        <el-form-item label="优惠Code">
+          <el-input v-model="promotion.couponCode" style="width:350px" placeholder="请输入酒店优惠code"></el-input>
+        </el-form-item>
+        <el-form-item label="优惠政策">
+          <el-input v-model="promotion.couponPolicy" style="width:350px" placeholder="请输入酒店优惠政策"></el-input>
+        </el-form-item>
+        <el-form-item label="优惠时间">
+          <el-col :span="5">
+            <el-date-picker v-model="promotion.couponEffectDate" type="date" placeholder="优惠开始时间">
+            </el-date-picker>
+          </el-col>
+          <el-col class="line" :span="1">—</el-col>
+          <el-col :span="5">
+            <el-date-picker v-model="promotion.couponExpDate" type="date" placeholder="优惠到期时间">
+            </el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="优惠简介" style="height:200px;">
+          <quill-editor v-model="promotion.recommendShortText" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
+          </quill-editor>
+        </el-form-item>
+        <el-form-item label="优惠详情" style="height:200px;">
+          <quill-editor v-model="promotion.recommendText" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
+          </quill-editor>
+        </el-form-item>
+      </template>
       <el-form-item>
         <el-button type="primary" @click="submitForm('hotelform')">提交</el-button>
         <el-button @click="resetForm('hotelform')">重置</el-button>
@@ -90,6 +116,13 @@
 }
 .el-radio-group {
   margin-left: -30px;
+}
+.editer {
+  width: 700px;
+  height: 150px;
+}
+.line{
+  text-align: center;
 }
 </style>
 <script>
@@ -157,7 +190,8 @@ export default {
           [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
           [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
           [{ 'font': [] }]]
-        }
+        },
+        placeholder: '请输入...'
       }
     }
   },
