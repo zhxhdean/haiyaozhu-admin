@@ -3,6 +3,8 @@ export const SUCCESS = 1
 export const NO_PASSWORD = -9
 // token失效
 export const TOKEN_ERROR = -2
+// token失效
+export const TOKEN_INVALID = -8
 // 接口未知错误
 export const ERROR = 0
 // 网络请求超时

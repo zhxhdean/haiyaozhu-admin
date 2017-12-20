@@ -1,6 +1,7 @@
 import axios from 'axios'
 import storage from '../common/localstorage'
-import {TIMEOUT, TOKEN_ERROR} from './errorcode'
+import {LOGIN_PAGE} from '@/common/urls'
+import {TIMEOUT, TOKEN_ERROR, TOKEN_INVALID} from './errorcode'
 axios.defaults.baseURL = 'http://m.haiyaozhu.com/openapi'
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
 axios.defaults.timeout = 5000
@@ -29,8 +30,8 @@ function get(url, params, headers = true) {
   })
     .then(function (response) {
       if (response.status === 200 && response.statusText === 'OK') {
-        if (response.data.code === TOKEN_ERROR) {
-          return TOKEN_ERROR
+        if (response.data.code === TOKEN_ERROR || response.data.code === TOKEN_INVALID) {
+          location.href = LOGIN_PAGE
         }
         return response.data
       }
@@ -53,8 +54,8 @@ function post(url, params) {
     .post(url, setHeader(params))
     .then(function (response) {
       if (response.status === 200 && response.statusText === 'OK') {
-        if (response.data.code === TOKEN_ERROR) {
-          return TOKEN_ERROR
+        if (response.data.code === TOKEN_ERROR || response.data.code === TOKEN_INVALID) {
+          location.href = LOGIN_PAGE
         }
         return response.data
       }

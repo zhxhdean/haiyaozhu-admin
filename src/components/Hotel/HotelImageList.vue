@@ -62,7 +62,7 @@ ul li div:hover {
 import utils from '@/common/utils'
 import login from '@/api/login'
 import hotel from '@/api/hotel'
-import { ERROR, SUCCESS } from '@/api/errorcode'
+import { ERROR, SUCCESS, TOKEN_INVALID } from '@/api/errorcode'
 export default {
   props: ['hotelimages', 'hotelinfo'],
   data() {
@@ -114,6 +114,8 @@ export default {
           this.hotelimages = []
         }
         this.hotelimages.push({ id: response.image.id, ImageUrl: response.image.ImageUrl })
+      } else if (response.code === TOKEN_INVALID) {
+        this.$message.error('token已过期,请重新登录')
       }
     },
     uploadError(response, file, fileList) {

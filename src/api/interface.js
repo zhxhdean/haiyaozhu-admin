@@ -9,3 +9,7 @@ export const HOTEL_VALIDATE = '/admin/sethotelvalid'
 export const IMAGE_DELETE = '/admin/delete'
 // 二维码接口
 export const QRCODE = '/wx_qrcode'
+// 城市集合
+export const CITY = '/citylist'
+// 集团集合
+export const HOTEL_GROUP = '/admin/grouplist'
