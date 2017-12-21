@@ -13,3 +13,7 @@ export const QRCODE = '/wx_qrcode'
 export const CITY = '/citylist'
 // 集团集合
 export const HOTEL_GROUP = '/admin/grouplist'
+// 酒店录入/修改
+export const HOTEL_ADD_EDIT = '/admin/sethotelinfo'
+// 获取信息
+export const HOTEL_DETAIL = '/admin/hotelinfo'

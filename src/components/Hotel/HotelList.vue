@@ -58,7 +58,7 @@
       <el-table-column label="操作" show-overflow-tooltip>
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit"></el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="goToHotel(scope.row)"></el-button>
             <el-button type="primary" icon="el-icon-share" @click="showQRCode(scope.row)"></el-button>
           </el-button-group>
         </template>
@@ -76,6 +76,7 @@ import hotel from '@/api/hotel'
 import utils from '@/common/utils'
 import login from '@/api/login'
 import { SUCCESS_ACTION } from '@/api/message'
+import {HOTEL_ADD_OR_EDIT} from '@/common/urls'
 export default {
   data() {
     return {
@@ -107,6 +108,10 @@ export default {
         return value.HotelId
       })
       // console.log(this.multipleSelection)
+    },
+    goToHotel(row) {
+      console.log(`${HOTEL_ADD_OR_EDIT}${row.HotelId}`)
+      this.$router.push({path: `${HOTEL_ADD_OR_EDIT}${row.HotelId}`})
     },
     showQRCode(row) {
       hotel.getHotelQRCode(row.HotelId).then(

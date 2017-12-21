@@ -6,8 +6,8 @@
       </el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过4M</div>
     </el-upload>
-    <ul>
-      <li v-for="img of hotelimages" :key="img.id"><img :src="img.ImageUrl" />
+    <ul class="images">
+      <li v-for="img of hotelImages" :key="img.id"><img :src="img.ImageUrl" />
         <div>
           <i class="close el-icon-delete" @click="deleteImage(img.id)"></i>
         </div>
@@ -17,17 +17,19 @@
   </div>
 </template>
 <style>
-ul {
+.images {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-ul li {
+.images li {
   float: left;
   position: relative;
 }
-ul li img {
+.images li img {
   width: 150px;
+  height:115px;
+  max-height: 115px;
   margin: 10px;
   padding: 5px;
   border: 1px solid #b5bac0;
@@ -35,7 +37,7 @@ ul li img {
   box-sizing: border-box;
   z-index: 0;
 }
-ul li div {
+.images li div {
   height: 30px;
   line-height: 30px;
   background: #000;
@@ -46,7 +48,7 @@ ul li div {
   z-index: 10;
   opacity: 0;
 }
-ul li div:hover {
+.images li div:hover {
   opacity: 0.75;
 }
 .close {
@@ -62,34 +64,22 @@ ul li div:hover {
 import utils from '@/common/utils'
 import login from '@/api/login'
 import hotel from '@/api/hotel'
-import { ERROR, SUCCESS, TOKEN_INVALID } from '@/api/errorcode'
+import { ERROR, SUCCESS, TOKEN_INVALID, NOT_MATCH_UID } from '@/api/errorcode'
 export default {
-  props: ['hotelimages', 'hotelinfo'],
+  props: ['hotelImages', 'hotelInfo'],
   data() {
     return {
       formdata: {
         token: '',
-        hoteluid: '6aa18ecca4d911e6-93354437e6c45e3f',
-        hotelid: 38,
+        hoteluid: '',
+        hotelid: 0,
         baseroomid: 0
       }
     }
   },
   created() {
-    this.hotelimages = [
-      {
-        ImageUrl: 'http://o9w04gb4c.bkt.clouddn.com/hyz-images/h38/8ca26f17423f4f09b88618f8ff8ab04e.jpg?imageView2/1/w/550/h/412',
-        id: 36
-      },
-      {
-        ImageUrl: 'http://o9w04gb4c.bkt.clouddn.com/hyz-images/h38/8ca26f17423f4f09b88618f8ff8ab04e.jpg?imageView2/1/w/550/h/412',
-        id: 32
-      },
-      {
-        ImageUrl: 'http://o9w04gb4c.bkt.clouddn.com/hyz-images/h38/8ca26f17423f4f09b88618f8ff8ab04e.jpg?imageView2/1/w/550/h/412',
-        id: 62
-      }
-    ]
+    this.formdata.hoteluid = this.hotelInfo.uid
+    this.formdata.hotelid = this.hotelInfo.id
   },
   methods: {
     beforeUpload(file) {
@@ -107,13 +97,12 @@ export default {
     uploadSuccess(response, file, fileList) {
       if (response.code === ERROR) {
         this.$message.error('上传发生错误')
+      } else if (response.code === NOT_MATCH_UID) {
+        this.$message.error('酒店ID不匹配错误')
       } else if (response.code === SUCCESS) {
         // todo 成功
         this.$notify({ type: 'success', title: '成功', message: '图片上传成功' })
-        if (this.hotelimages === undefined) {
-          this.hotelimages = []
-        }
-        this.hotelimages.push({ id: response.image.id, ImageUrl: response.image.ImageUrl })
+        this.hotelImages.push({ id: response.image.id, ImageUrl: response.image.ImageUrl })
       } else if (response.code === TOKEN_INVALID) {
         this.$message.error('token已过期,请重新登录')
       }
@@ -125,8 +114,13 @@ export default {
       this.$confirm('此操作将永久删除该图片,是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
-        hotel.deleteHotelImage({ uid: this.hotelinfo.uid, hotelID: this.hotelinfo.hotelID, id: id }).then(response => {
+        hotel.deleteHotelImage({ uid: this.hotelInfo.uid, hotelID: this.hotelInfo.hotelID, id: id }).then(response => {
           if (response === SUCCESS) {
+            this.hotelImages.find((value, index, arr) => {
+              if (value.id === id) {
+                this.hotelImages.splice(index, 1)
+              }
+            })
             this.$notify({ type: 'success', title: '成功', message: '图片已成功删除' })
           } else {
             this.$message.error(response)
