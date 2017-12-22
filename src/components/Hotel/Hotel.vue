@@ -1,5 +1,10 @@
 <template>
   <div class="form">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{path: '/hotellist'}">酒店列表</el-breadcrumb-item>
+      <el-breadcrumb-item>酒店信息</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-tabs type="border-card">
       <el-tab-pane label="信息管理">
         <el-form label-width="90px" :model="hotelform" ref="hotelform">
@@ -17,6 +22,7 @@
           </el-form-item>
           <el-form-item label="酒店类型" prop="hotelType">
             <el-radio-group v-model="hotelform.hotelType">
+              <el-radio :label="0">加盟酒店</el-radio>
               <el-radio :label="1">酒店官网</el-radio>
               <el-radio :label="2">酒店公众号</el-radio>
             </el-radio-group>
@@ -59,38 +65,47 @@
             <quill-editor v-model="hotelform.hotelDesc" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
             </quill-editor>
           </el-form-item>
+
           <el-form-item>
-            <el-col :span="8">
-              <el-button icon="el-icon-plus" @click="addPromotion" :disabled="hotelform.hotelPromotions.length >= 5 ? true : false">增加优惠条数</el-button>
-            </el-col>
-            <el-col :span="16">
-              <el-switch v-model="hotelform.isCover" active-color="#f20" @change="confirm2" :width="50" active-text="勾选此选项将会把此酒店所属酒店集团下所有酒店的优惠信息更新为以下的优惠信息"></el-switch>
-            </el-col>
-            
+            <el-button type="primary" @click="submitForm('hotelform')">提交</el-button>
+            <el-button @click="resetForm('hotelform')">重置</el-button>
           </el-form-item>
-          <template v-for="(promotion,index) in hotelform.hotelPromotions">
-            <div class="promotion">
-            <el-form-item label="优惠Code" >
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="优惠管理">
+        <el-form label-width="90px" :model="hotelform">
+        <el-form-item>
+          <el-col :span="8">
+            <el-button icon="el-icon-plus" @click="addPromotion" :disabled="hotelform.hotelPromotions.length >= 5 ? true : false">增加优惠条数</el-button>
+          </el-col>
+          <el-col :span="16">
+            <el-switch v-model="hotelform.isCover" active-color="#f20" @change="confirm2" :width="50" active-text="勾选此选项将会把此酒店所属酒店集团下所有酒店的优惠信息更新为以下的优惠信息"></el-switch>
+          </el-col>
+
+        </el-form-item>
+        <template v-for="(promotion,index) in hotelform.hotelPromotions">
+          <div class="promotion">
+            <el-form-item label="优惠Code">
               <el-input v-model="promotion.couponCode" style="width:350px" placeholder="请输入酒店优惠code"></el-input>
               <el-button type="danger" icon="el-icon-delete" :disabled="hotelform.hotelPromotions.length === 1 ? true : false " @click="deletePromotion(index)">删除此优惠</el-button>
             </el-form-item>
-            <el-form-item label="优惠政策" >
+            <el-form-item label="优惠政策">
               <el-input v-model="promotion.couponPolicy" style="width:350px" placeholder="请输入酒店优惠政策"></el-input>
             </el-form-item>
             <el-form-item label="优惠时间">
-              <div style="width:500px"> 
+              <div style="width:500px">
                 <el-col :span="11">
-                <el-date-picker v-model="promotion.couponEffectDate" value-format="yyyy-MM-dd" type="date" placeholder="优惠开始时间">
-                </el-date-picker>
-              </el-col>
-              <el-col class="line" :span="2">—</el-col>
-              <el-col :span="11">
-                <el-date-picker v-model="promotion.couponExpDate" value-format="yyyy-MM-dd" type="date" placeholder="优惠到期时间">
-                </el-date-picker>
-              </el-col>
-              </div>     
+                  <el-date-picker v-model="promotion.couponEffectDate" value-format="yyyy-MM-dd" type="date" placeholder="优惠开始时间">
+                  </el-date-picker>
+                </el-col>
+                <el-col class="line" :span="2">—</el-col>
+                <el-col :span="11">
+                  <el-date-picker v-model="promotion.couponExpDate" value-format="yyyy-MM-dd" type="date" placeholder="优惠到期时间">
+                  </el-date-picker>
+                </el-col>
+              </div>
             </el-form-item>
-            <el-form-item label="优惠简介" style="height:200px;" >
+            <el-form-item label="优惠简介" style="height:200px;">
               <quill-editor v-model="promotion.recommendShortText" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
               </quill-editor>
             </el-form-item>
@@ -98,17 +113,13 @@
               <quill-editor v-model="promotion.recommendText" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
               </quill-editor>
             </el-form-item>
-            </div>
-          </template>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('hotelform')">提交</el-button>
-            <el-button @click="resetForm('hotelform')">重置</el-button>
-          </el-form-item>
+          </div>
+        </template>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="图片管理">
-        <div v-if="hotelform.hotelID===0">添加完酒店信息后才可以上传图片！</div>
-        <hotel-images v-if="hotelform.hotelID !==0 " :hotelImages="hotelform.images" :hotelInfo="{uid: hotelform.uid, hotelID: hotelform.hotelID}">
+        <div v-if="hotelID===0">添加完酒店信息后才可以上传图片！</div>
+        <hotel-images v-if="hotelID !==0 " :hotelImages="hotelform.images" :hotelInfo="{uid: hotelform.uid, hotelID: hotelform.hotelID}">
         </hotel-images>
       </el-tab-pane>
     </el-tabs>
@@ -118,6 +129,9 @@
 .form {
   margin: 10px;
   padding: 10px;
+}
+.el-breadcrumb {
+  margin: 10px 0px;
 }
 .el-cascader-menu {
   height: 450px;
@@ -142,14 +156,14 @@
   width: 700px;
   height: 150px;
 }
-.line{
+.line {
   text-align: center;
 }
-.promotion{
+.promotion {
   /* border: 1px solid #ddd;
   border-radius: 4px; */
-  background:#f5f7facc;
-  padding:5px;
+  background: #f5f7facc;
+  padding: 5px;
   margin-bottom: 10px;
 }
 </style>
@@ -162,7 +176,7 @@ import { ERROR, SUCCESS } from '@/api/errorcode'
 import utils from '@/common/utils'
 import { quillEditor } from 'vue-quill-editor'
 import hotelImages from './HotelImageList'
-import urls from '@/common/urls'
+
 export default {
   data() {
     return {
@@ -249,9 +263,11 @@ export default {
         return false
       }
       hotel.saveHotel(this.hotelform).then(response => {
-        if (response === SUCCESS) {
+        if (utils.isJSON(response) && response.code === SUCCESS) {
           this.$notify({ type: 'success', title: '成功', message: '酒店信息提交成功' })
           this.$refs[formName].resetFields()
+          this.$store.state.hotelID = response.hotelID
+          this.$router.push({path: `/hotel/${response.hotelID}`})
         } else {
           this.$message.error(response)
         }
@@ -310,7 +326,7 @@ export default {
       this.$message.error('上传发生错误')
     },
     // #endregion
-    addPromotion () {
+    addPromotion() {
       this.hotelform.hotelPromotions.push({})
     },
     deletePromotion(index) {
@@ -327,7 +343,7 @@ export default {
     }
   },
   created() {
-    urls.activeIndex(this.$route.path)
+    this.$store.state.activeIndex = '3'
     // 城市
     city.getCities().then(response => {
       if (utils.isJSON(response) && response.code === SUCCESS) {
@@ -382,6 +398,45 @@ export default {
   components: {
     quillEditor,
     hotelImages
+  },
+  computed: {
+    hotelID: {
+      get() {
+        const hotelID = this.$store.state.hotelID
+        if (hotelID === 0) {
+          this.hotelform = {
+            hotelID: 0,
+            uid: 0,
+            hotelName: '',
+            hotelAddress: '',
+            hotelTel: '',
+            cityID: 0,
+            hotelType: 1,
+            hotelUrl: '',
+            weChatUrl: '',
+            imageID: '',
+            groupID: 0,
+            star: 1.5,
+            isPriority: false,
+            isCover: false,
+            hotelDesc: '',
+            hotelPromotions: [{
+              couponEffectDate: '',
+              couponExpDate: '',
+              couponCode: '',
+              couponPolicy: '',
+              recommendShortText: '',
+              recommendText: ''
+            }],
+            images: []
+          }
+          this.selectedCity = []
+        }
+        return hotelID
+      },
+      set() {
+      }
+    }
   }
 }
 </script>

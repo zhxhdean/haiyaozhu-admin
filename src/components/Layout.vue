@@ -13,17 +13,21 @@
 </template>
 
 <script>
-import urls from '@/common/urls'
+import { activeMenuIndex } from '@/common/urls'
 import login from '@/api/login'
+import storage from '@/common/localstorage'
 export default {
   data() {
     return {
-      activeIndex: '1'
     }
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath)
+      if (key === '2') {
+        storage.set('currentPage', 1)
+      }
+      this.$store.state.hotelID = 0
     },
     logout() {
       this.$confirm('你正在退出后台管理系统, 是否继续?', '提示', {
@@ -42,7 +46,16 @@ export default {
   },
   created() {
     // 页面直进，设置menu active
-    this.activeIndex = urls.activeIndex(this.$route.path)
+    this.activeIndex = activeMenuIndex(this.$route.path)
+  },
+  computed: {
+    activeIndex: {
+      get() {
+        return this.$store.state.activeIndex
+      },
+      set() {
+      }
+    }
   }
 }
 </script>

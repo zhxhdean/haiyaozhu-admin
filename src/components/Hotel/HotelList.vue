@@ -76,7 +76,9 @@ import hotel from '@/api/hotel'
 import utils from '@/common/utils'
 import login from '@/api/login'
 import { SUCCESS_ACTION } from '@/api/message'
-import {HOTEL_ADD_OR_EDIT} from '@/common/urls'
+import { HOTEL_ADD_OR_EDIT } from '@/common/urls'
+import storage from '@/common/localstorage'
+
 export default {
   data() {
     return {
@@ -111,7 +113,8 @@ export default {
     },
     goToHotel(row) {
       console.log(`${HOTEL_ADD_OR_EDIT}${row.HotelId}`)
-      this.$router.push({path: `${HOTEL_ADD_OR_EDIT}${row.HotelId}`})
+      this.$store.state.hotelID = row.HotelId
+      this.$router.push({ path: `${HOTEL_ADD_OR_EDIT}${row.HotelId}` })
     },
     showQRCode(row) {
       hotel.getHotelQRCode(row.HotelId).then(
@@ -170,6 +173,7 @@ export default {
     // 翻页
     handleCurrentChange(val) {
       this.currentPage = +val
+      storage.set('currentPage', this.currentPage)
       this.getHotelList()
     },
     // 获取列表数据
@@ -195,7 +199,9 @@ export default {
     }
   },
   created() {
+    this.$store.state.activeIndex = '2'
     this.user = login.getUser() || {}
+    this.currentPage = storage.get('currentPage') || 1
     this.getHotelList()
   }
 }

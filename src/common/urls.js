@@ -8,7 +8,7 @@ export const LOGIN_PAGE = '/login'
 // 酒店录入
 export const HOTEL_ADD_OR_EDIT = '/hotel/'
 // url映射对应的activeindex
-function activeIndex (path) {
+export function activeMenuIndex (path) {
   console.log(path)
   if (path.includes(INDEX)) {
     return '1'
@@ -17,8 +17,4 @@ function activeIndex (path) {
   } else if (path.includes(HOTEL_ADD_OR_EDIT)) {
     return '3'
   }
-}
-
-export default {
-  activeIndex
 }
