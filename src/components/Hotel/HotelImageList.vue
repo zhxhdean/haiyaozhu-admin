@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-upload class="upload-demo" action="http://m.haiyaozhu.com/openapi/eb/upload" name="uploadimage" :data="formdata" :before-upload="beforeUpload" :show-file-list="false" :on-success="uploadSuccess" :on-error="uploadError">
+    <el-upload v-loading="loading" element-loading-text="图片上传中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" class="upload-demo" action="http://m.haiyaozhu.com/openapi/eb/upload" name="uploadimage" :data="formdata" :before-upload="beforeUpload" :show-file-list="false" :on-success="uploadSuccess" :on-error="uploadError">
       <el-button size="medium" type="primary">上传酒店图片
         <i class="el-icon-upload el-icon--right"></i>
       </el-button>
@@ -69,6 +69,7 @@ export default {
   props: ['hotelImages', 'hotelInfo'],
   data() {
     return {
+      loading: false,
       formdata: {
         token: '',
         hoteluid: '',
@@ -78,8 +79,6 @@ export default {
     }
   },
   created() {
-    this.formdata.hoteluid = this.hotelInfo.uid
-    this.formdata.hotelid = this.hotelInfo.id
   },
   methods: {
     beforeUpload(file) {
@@ -91,10 +90,14 @@ export default {
       if (!isLt4M) {
         this.$message.error('上传头像图片大小不能超过 4MB!')
       }
+      this.formdata.hoteluid = this.hotelInfo.uid
+      this.formdata.hotelid = this.hotelInfo.hotelID
       this.formdata.token = login.getToken()
+      this.loading = true
       return isSafe && isLt4M
     },
     uploadSuccess(response, file, fileList) {
+      this.loading = false
       if (response.code === ERROR) {
         this.$message.error('上传发生错误')
       } else if (response.code === NOT_MATCH_UID) {
@@ -108,6 +111,7 @@ export default {
       }
     },
     uploadError(response, file, fileList) {
+      this.loading = false
       this.$message.error('上传发生错误')
     },
     deleteImage(id) {

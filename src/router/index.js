@@ -11,6 +11,7 @@ Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
+  base: '/admin2/',
   routes: [
     {
       path: '/login',
@@ -42,7 +43,14 @@ const router = new Router({
             requireLogin: true // 需要登录
           }
         }, {
-          path: '/hotel/:id?',
+          path: '/hotel/:id',
+          name: 'HotelAddOrEdit',
+          component: Hotel,
+          meta: {
+            requireLogin: true // 需要登录
+          }
+        }, {
+          path: '/hotel',
           name: 'HotelAddOrEdit',
           component: Hotel,
           meta: {

@@ -1,8 +1,10 @@
 <template>
+<div class="login-body">
   <div class="login-form" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
     <input type="text" class="txt" placeholder="帐户" v-model="loginInfo.userName" />
     <input type="password" class="txt" placeholder="密码" v-model="loginInfo.userPwd" @keyup.enter="submit" />
     <input type="submit" class="btn" value="登 陆" @click="submit">
+  </div>
   </div>
 </template>
 <style>
@@ -13,7 +15,10 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-body {
+.login-body {
+  width:100%;
+  height:800px;
+  min-height:800px;
   background-color: #323b55;
   background-image: -webkit-linear-gradient(
     bottom,
@@ -159,7 +164,7 @@ export default {
         this.loading = false
         if (response === code.SUCCESS) {
           // 登录成功
-          location.href = '/index'
+          location.href = 'index'
         } else {
           this.$message({
             showClose: true,

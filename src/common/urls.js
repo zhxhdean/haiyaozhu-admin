@@ -4,7 +4,7 @@ export const INDEX = '/index'
 // 酒店列表
 export const HOTEL_LIST = '/hotellist'
 // 登录页
-export const LOGIN_PAGE = '/login'
+export const LOGIN_PAGE = './login'
 // 酒店录入
 export const HOTEL_ADD_OR_EDIT = '/hotel/'
 // url映射对应的activeindex
