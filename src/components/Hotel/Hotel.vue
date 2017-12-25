@@ -402,7 +402,7 @@ export default {
   computed: {
     hotelID: {
       get() {
-        const hotelID = this.$store.state.hotelID
+        const hotelID = this.$route.params.id || 0
         if (hotelID === 0) {
           this.hotelform = {
             hotelID: 0,
