@@ -11,12 +11,7 @@
       <el-col :span="2">
         <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="primary" @click="showDialog(true)" v-if="user.userName==='admin'">上线</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="danger" @click="showDialog(false)" v-if="user.userName==='admin'">下线</el-button>
-      </el-col>
+
     </el-row>
 
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" center v-loading="loading">
@@ -64,11 +59,18 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-top:10px;text-align:center;">
+    <div style="margin-top:10px;text-align:center;height:35px;">
       <el-pagination background @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="20" layout="prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-
+    <div style="margin-left:20px;margin-top:-40px;height:50px;">
+      <el-col :span="2">
+        <el-button type="primary" @click="showDialog(true)" v-if="user.userName==='admin'">上线</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="danger" @click="showDialog(false)" v-if="user.userName==='admin'">下线</el-button>
+      </el-col>
+    </div>
   </div>
 </template>
 <script>
